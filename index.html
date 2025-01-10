@@ -19,18 +19,23 @@
             justify-content: center;
             gap: 10px;
             padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .magnet {
             padding: 10px 20px;
             background-color: #fafafa;
             color: #1e1e1e;
-            border-radius: 5px;
+            border-radius: 2px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             display: inline-block;
             font-weight: 600;
+        }
+
+        .magnet.dragging {
+            background-color: lightblue;
+        }
+        .magnet.dragging {
+            background-color: #fdfdfd;
         }
 
         @media print {
@@ -65,42 +70,104 @@
 
     function makeMagnets ( words ) {
         const container = document.createElement('div')
-        const hash = {}
-        const same_width_words = {};
+        const magnet_hash = [ magnets = {}, function (index, magnet) {
+
+            magnet.bounds_info = magnet.getBoundingClientRect()
+
+            console.log(magnet.bounds_info)
+
+            if (this[0][index]) {
+                this[0][index].push(magnet)
+            } else {
+                this[0][index] = [magnet]
+            }
+        }]
+
+        const detailed_width_hash = {}
+        const same_width_words = {}
+
 
         container.classList.add('magnet-container')
         document.body.appendChild(container)
 
         words.forEach(word => {
-            /*            if (count[0] > 100) {
+                        if (count[0] > 1000) {
                             return
-                        }*/
+                        }
 
             const magnet = document.createElement('div')
 
             magnet.classList.add('magnet')
             magnet.textContent = word
+
+            // add drag and drop capability
+            magnet.draggable = true
+
+            // on click, magnet style is absolute
+            magnet.addEventListener('click', function () {
+
+                let bounds_info = magnet.getBoundingClientRect()
+
+                console.log(bounds_info.width)
+
+                magnet.style.position = 'absolute'
+                magnet.style.left = bounds_info.left + 10 + 'px'
+                magnet.style.top = bounds_info.top + 10 + 'px'
+            })
+
+            // on drag, magnet style is fixed
+            magnet.addEventListener('dragstart', function (event) {
+
+                event.dataTransfer.setData('text/plain', magnet.textContent)
+                magnet.className += ' dragging'
+
+
+            })
+
+            magnet.addEventListener('dragend', function (event) {
+
+                const bounds_info = magnet.getBoundingClientRect()
+                const span = document.createElement('span')
+
+                span.style.width = bounds_info.width + 'px'
+                span.style.height = bounds_info.height + 'px'
+                span.style.display = 'inline-block'
+
+                magnet.className = magnet.className.replace(' dragging', ' moved')
+
+                // magnet top and left are set to the current cursor position
+                magnet.style.position = 'absolute'
+                magnet.style.top = event.clientY + 'px'
+                magnet.style.left = event.clientX + 'px'
+
+            })
+
             container.appendChild(magnet)
 
             const width = magnet.offsetWidth
 
+            magnet.bounds_info = magnet.getBoundingClientRect()
 
-            if (hash[width]) {
+            //console.log(magnet.bounds_info)
+
+
+            if (magnet_hash[0][width]) {
 
                 if (same_width_words[width] === undefined) {
-                    same_width_words[width] = [ hash[width][0] ]
+                    same_width_words[width] = [ magnet_hash[0][width][0] ]
                 }
 
-                hash[width].push(word)
+                magnet_hash[1](width, magnet)
 
                 same_width_words[width].push(word)
 
                 if (width === 100) {
                     document.body.appendChild(magnet)
+                    //console.log(word, magnet.getBoundingClientRect().width)
                 }
 
             } else {
-                hash[width] = [word]
+                magnet_hash[0][width] = [magnet]
             }
 
             count[1]()
@@ -109,12 +176,25 @@
             // console.log(width)
         })
 
+        // sort magnet_hash[100] by bounds_info.width
+            (magnet_hash[0]).forEach( magnet_width_index => {
+            this[magnet_width_index].sort((a, b) => {
 
-        console.log(hash)
-        console.log(same_width_words)
-        console.log(hash[100])
+                // if a.bounds_info.width is undefined, return
+                if (a.bounds_info === undefined) {
+                    return
+                } else if (b.bounds_info.width === undefined) {
+                    return
+                } else {
+                    return a.bounds_info.width - b.bounds_info.width
+                }
+            })
+        } )
+
+        console.log(magnet_hash[0]);
 
     }
+
 
     const keywords = [ "abandon",
         "ability",
