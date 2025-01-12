@@ -72,9 +72,15 @@
         const container = document.createElement('div')
         const magnet_hash = [ magnets = {}, function (index, magnet) {
 
-            magnet.bounds_info = magnet.getBoundingClientRect()
+            const word = magnet.textContent;
 
-            console.log(magnet.bounds_info)
+            this[0].magnet_specs_hash = this[0].magnet_specs_hash || {}
+            this[0].magnet_specs_hash[word] = this[0].magnet_specs_hash[word] || {}
+
+            this[0].magnet_specs_hash[word]['bounds_info'] = magnet.getBoundingClientRect()
+
+
+            //console.log(magnet.bounds_info)
 
             if (this[0][index]) {
                 this[0][index].push(magnet)
@@ -83,16 +89,32 @@
             }
         }]
 
-        const detailed_width_hash = {}
+/*        const magnet_specs_hash = [ magnet_specs = {}, function (index, key, value) {
+
+            this[index][key] = value;
+
+            this['magnet_specs_hash_count'] = this['magnet_specs_hash_count'] || 0;
+
+            this['magnet_specs_hash_count'] += 1;
+
+        }]*/
+
         const same_width_words = {}
 
 
         container.classList.add('magnet-container')
         document.body.appendChild(container)
 
-        words.forEach(word => {
-                        if (count[0] > 1000) {
-                            return
+        words.every(word => {
+                        if (count[0] === 101) {
+                           // console.log(magnet_hash[0])
+                           console.log(magnet_hash[0].magnet_specs_hash)
+
+                            count[0] += 1
+                            return false
+                        } else if (count[0] > 101) {
+                            count[0] += 1
+                            return false
                         }
 
             const magnet = document.createElement('div')
@@ -105,6 +127,9 @@
 
             // on click, magnet style is absolute
             magnet.addEventListener('click', function () {
+
+                console.log(magnet.textContent)
+                console.log(magnet_hash[0].magnet_specs_hash[magnet.textContent].bounds_info)
 
                 let bounds_info = magnet.getBoundingClientRect()
 
@@ -162,7 +187,7 @@
                 same_width_words[width].push(word)
 
                 if (width === 100) {
-                    document.body.appendChild(magnet)
+                    //document.body.appendChild(magnet)document.body.appendChild(magnet)
                     //console.log(word, magnet.getBoundingClientRect().width)
                 }
 
@@ -191,7 +216,18 @@
             })
         } )
 
-        console.log(magnet_hash[0]);
+        (magnet_hash[0]).forEach( magnet_index => {
+            this[magnet_index].forEach( magnet => {
+                magnet.style.outline = '1px solid lightgreen'
+                magnet.attributes['data-width'] = magnet.bounds_info.width
+                //container.appendChild(magnet)
+                document.body.appendChild(magnet)
+            })
+        })
+
+        //console.log(magnet_hash[0]);
+
+        //console.log(magnet_hash[0].magnet_specs_hash)
 
     }
 
