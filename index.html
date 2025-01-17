@@ -65,30 +65,36 @@
 
     const count = [0, function () {
         this[0] = Number(this[0]) + 1;
-       // console.log(this[0])
+
     }]
 
     const magnet_specs_hash = [ magnet_specs = {}, function (index, key, value) {
 
-        if (this[index]) {
+        if (magnet_specs_hash[0][index]) {
 
             if (index === "width_hash_length") {
                 magnet_specs_hash[0][index] = magnet_specs_hash[0][index] || 0
                 magnet_specs_hash[0][index] = Number(magnet_specs_hash[0][index]) + 1
 
                 return
+            } else {
+
+                if ( magnet_specs_hash[0][index][key] ) {
+                    magnet_specs_hash[0][index][key] = value
+                } else  {
+                    magnet_specs_hash[0][index][key] = value
+                }
             }
 
-            magnet_specs_hash[0][index][key] = value;
         } else {
-            magnet_specs_hash[0][index] = {}
-            magnet_specs_hash[0][index][key] = value;
+            magnet_specs_hash[0][index] = {key: value}
         }
+
         magnet_specs_hash[0]['magnet_specs_hash_count'] = magnet_specs_hash[0]['magnet_specs_hash_count'] || 0;
 
         magnet_specs_hash[0]['magnet_specs_hash_count'] = Number(magnet_specs_hash[0]['magnet_specs_hash_count']) + 1;
 
-        console.log(magnet_specs_hash[0]['magnet_specs_hash_count'])
+
 
     }]
 
@@ -98,11 +104,6 @@
 
             const word = magnet.textContent;
 
-            //console.log("line 77", this[0])
-            //console.log("line 79", magnet)
-
-
-            //console.log(magnet.bounds_info)
 
             if (this[0][index]) {
                 this[0][index].push(magnet)
@@ -111,7 +112,6 @@
             } else {
                 this[0][index] = [ magnet ]
 
-                magnet_specs_hash
             }
         }]
 
@@ -132,6 +132,7 @@
         document.body.appendChild(container)
 
         words.forEach((word, words_index = 0) => {
+            /*
                         if (count[0] === 101) {
 
                             count[1]()
@@ -147,7 +148,7 @@
 
                             return false
                         }
-
+*/
             const magnet = document.createElement('div')
 
             magnet.classList.add('magnet')
@@ -160,12 +161,12 @@
             // on click, magnet style is absolute
 /*            magnet.addEventListener('click', function () {
 
-                console.log(magnet.textContent)
-                console.log(magnet_hash[0].magnet_specs_hash[magnet.textContent].bounds_info)
+
+
 
                 let bounds_info = magnet.getBoundingClientRect()
 
-                console.log(bounds_info.width)
+
 
                 magnet.style.position = 'absolute'
                 magnet.style.left = bounds_info.left + 10 + 'px'
@@ -232,7 +233,7 @@
 
                 if (width === 100) {
                     //document.body.appendChild(magnet)document.body.appendChild(magnet)
-                    //console.log(word, magnet.getBoundingClientRect().width)
+
                 }
 
             } else {
@@ -241,75 +242,145 @@
 
             count[1]()
 
-            // console.log(word)
-            // console.log(width)
-
-            console.log(magnet_hash[0])
 
 
 
 
-        //console.log(magnet_hash[0]);
 
-        //console.log(magnet_hash[0].magnet_specs_hash)
+
+
+
+
+
+
 
     })
 
 
         // sort magnet_hash[100] by bounds_info.width
-
         for (const [key, value] of Object.entries(magnet_hash[0])) {
-            console.log(`${key}: ${value}`);
+
 
             magnet_hash[0][key].sort((a, b) => {
 
                 // if a.bounds_info.width is undefined, return
                 // if (magnet_specs_hash[0][magnet_width_index][a.innerText]["width"] === undefined) {
                 if (a === undefined || a.getAttribute("data-exact-width") === undefined) {
+
+
                     return
                     //} else if (magnet_specs_hash[0][magnet_width_index][b.innerText]["width"] === undefined) {
                 } else if (b === undefined || !(b.attributes)) {
+
                     return
                 } else {
                     return (Number(a.getAttribute("data-exact-width")) -
                         Number(b.getAttribute("data-exact-width")))
                 }
             })
-        }
 
-        for (const [key, value] of Object.entries(magnet_hash[0])) {
+            const moveSameWidthWords = () => {
+                magnet_hash[0][key].forEach(magnet_index => {
 
-        magnet_hash[0][key].forEach( magnet_index => {
+                // get element with id = word
+                const word = magnet_index.innerText || ""
 
-            // get element with id = word
-            const word = magnet_hash[0][key][magnet_index].getAttribute("data-word") ||
-                magnet_hash[0][key][magnet_index].textContent || ""
+                if (word === "") {
+                    return
+                } else {
+                    const magnet = document.getElementById("word-" + word)
 
-            if (word === "") {
-                return
-            } else {
-                const magnet = document.getElementById("word-" + word)
+                    // create span element
+                    const span = document.createElement('span')
+                    magnet.style.outline = '1px solid lightgreen'
 
-                magnet.style.outline = '1px solid lightgreen'
+                    span.textContent = magnet.textContent
+                    span.style.width = magnet.getAttribute('data-exact-width') || 0
+                    span.style.width = span.style.width + 'px'
+                    span.style.height = magnet.offsetHeight + 'px'
+                    span.style.display = 'inline-block'
+                    span.style.opacity = "0"
 
-                // create span element
-                const span = document.createElement('span')
-                span.textContent = magnet.textContent
-                span.style.width = magnet.getAttribute('data-exact-width') + 'px'
-                span.style.height = magnet_specs_hash[0][magnet_index.getAttribute("data-word")]["bounds_info"].height + 'px'
-                span.style.display = 'inline-block'
-                span.style.opacity = "0"
+                    magnet.before(span)
+                    //container.appendChild(magnet)
+                    document.body.appendChild(magnet)
 
-                magnet.before(span)
-                //container.appendChild(magnet)
-                document.body.appendChild(magnet)
-            }
+
+                }
             })
+            }
+
+            // moveSameWidthWords()
+
         }
+
+
     }
 
+    let additional_words = ["bitcoin", "bitcoin", "bitcoin",
+    "Bitcoin",
+    "Bitcoin",
+    "Bitcoin",
+    "BTC",
+    "EUR",
+    "KYC",
+    "USD",
+    "₿",
+    "₿",
+    "₿",
+    "₿",
+    " ₿ ",
+    "$",
+    "€",
+    "dollars",
+    "cuckbucks",
+    "secure",
+    "secured",
+    "keys",
+    "seed",
+    "words",
+    "cold storage",
+    "wallet",
+    "hot wallet",
+    "in-person",
+    "meet",
+    "meetup",
+    "community",
+    "art",
+    "Know Your Butcher",
+    " . ",
+    " . ",
+    " . ",
+    " , ",
+    " , ",
+    " , ",
+    " ! ",
+    " ! ",
+    " ? ",
+    " ? ",
+    " ( ",
+    " ) ",
+    " { ",
+    " } ",
+    " [ ",
+    " ] ",
+    " = ",
+    " ≠ ",
+    "non",
+    "not"
+    ]
 
-    const keywords = [ "abandon",
+    const digits = [...Array(10).keys()].map((n) => String.fromCharCode(48 + n))
+    const uppercase_alphabets = [...Array(26).keys()].map((n) => String.fromCharCode(97 + n))
+    const lowercase_alphabets = [...Array(26).keys()].map((n) => String.fromCharCode(65 + n))
+
+
+    // concat uppercase_alphabets and lowercase_alphabets to additional_words
+    additional_words.push( ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...uppercase_alphabets, ...uppercase_alphabets, ...uppercase_alphabets, ...lowercase_alphabets, ...lowercase_alphabets, ...lowercase_alphabets )
+
+    console.log(additional_words)
+
+    let keywords = [ "abandon",
         "ability",
         "able",
         "about",
@@ -2356,9 +2427,11 @@
         "zebra",
         "zero",
         "zone",
-        "zoo" ];
+        "zoo" ]
 
-    makeMagnets(keywords);
+    keywords.push(...additional_words)
+
+    makeMagnets(keywords)
 
 </script>
 </body>
