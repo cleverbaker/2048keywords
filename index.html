@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Key words</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="description" content=""/>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -13,6 +13,7 @@
             background-color: #f0f0f0;
             margin: 0;
         }
+
         .magnet-container {
             display: flex;
             flex-wrap: wrap;
@@ -20,6 +21,7 @@
             gap: 10px;
             padding: 10px;
         }
+
         .magnet {
             padding: 10px 20px;
             background-color: #fafafa;
@@ -34,6 +36,7 @@
         .magnet.dragging {
             background-color: lightblue;
         }
+
         .magnet.dragging {
             background-color: #fdfdfd;
         }
@@ -68,7 +71,7 @@
 
     }]
 
-    const magnet_specs_hash = [ magnet_specs = {}, function (index, key, value) {
+    const magnet_specs_hash = [magnet_specs = {}, function (index, key, value) {
 
         if (magnet_specs_hash[0][index]) {
 
@@ -79,9 +82,9 @@
                 return
             } else {
 
-                if ( magnet_specs_hash[0][index][key] ) {
+                if (magnet_specs_hash[0][index][key]) {
                     magnet_specs_hash[0][index][key] = value
-                } else  {
+                } else {
                     magnet_specs_hash[0][index][key] = value
                 }
             }
@@ -95,12 +98,11 @@
         magnet_specs_hash[0]['magnet_specs_hash_count'] = Number(magnet_specs_hash[0]['magnet_specs_hash_count']) + 1;
 
 
-
     }]
 
-    function makeMagnets ( words ) {
+    function makeMagnets(words) {
         const container = document.createElement('div')
-        const magnet_hash = [ magnets = {}, function (index, magnet) {
+        const magnet_hash = [magnets = {}, function (index, magnet) {
 
             const word = magnet.textContent;
 
@@ -110,20 +112,20 @@
                 // this[0].magnet_specs_hash["hash_info"].magnet_specs_hash_count =
                 //     Number(this[0].magnet_specs_hash["hash_info"]["magnet_specs_hash_count"]) + 1
             } else {
-                this[0][index] = [ magnet ]
+                this[0][index] = [magnet]
 
             }
         }]
 
-/*        const magnet_specs_hash = [ magnet_specs = {}, function (index, key, value) {
+        /*        const magnet_specs_hash = [ magnet_specs = {}, function (index, key, value) {
 
-            this[index][key] = value;
+                    this[index][key] = value;
 
-            this['magnet_specs_hash_count'] = this['magnet_specs_hash_count'] || 0;
+                    this['magnet_specs_hash_count'] = this['magnet_specs_hash_count'] || 0;
 
-            this['magnet_specs_hash_count'] += 1;
+                    this['magnet_specs_hash_count'] += 1;
 
-        }]*/
+                }]*/
 
         const same_width_words = {}
 
@@ -154,51 +156,53 @@
             magnet.classList.add('magnet')
             magnet.textContent = word
 
+            magnet.dataset.count = count[0]
+
             // add drag and drop capability
             magnet.draggable = true
 
 
             // on click, magnet style is absolute
-/*            magnet.addEventListener('click', function () {
+            /*            magnet.addEventListener('click', function () {
 
 
 
 
-                let bounds_info = magnet.getBoundingClientRect()
+                            let bounds_info = magnet.getBoundingClientRect()
 
 
 
-                magnet.style.position = 'absolute'
-                magnet.style.left = bounds_info.left + 10 + 'px'
-                magnet.style.top = bounds_info.top + 10 + 'px'
-            })
+                            magnet.style.position = 'absolute'
+                            magnet.style.left = bounds_info.left + 10 + 'px'
+                            magnet.style.top = bounds_info.top + 10 + 'px'
+                        })
 
-            // on drag, magnet style is fixed
-            magnet.addEventListener('dragstart', function (event) {
+                        // on drag, magnet style is fixed
+                        magnet.addEventListener('dragstart', function (event) {
 
-                event.dataTransfer.setData('text/plain', magnet.textContent)
-                magnet.className += ' dragging'
+                            event.dataTransfer.setData('text/plain', magnet.textContent)
+                            magnet.className += ' dragging'
 
 
-            })
+                        })
 
-            magnet.addEventListener('dragend', function (event) {
+                        magnet.addEventListener('dragend', function (event) {
 
-                const bounds_info = magnet.getBoundingClientRect()
-                const span = document.createElement('span')
+                            const bounds_info = magnet.getBoundingClientRect()
+                            const span = document.createElement('span')
 
-                span.style.width = bounds_info.width + 'px'
-                span.style.height = bounds_info.height + 'px'
-                span.style.display = 'inline-block'
+                            span.style.width = bounds_info.width + 'px'
+                            span.style.height = bounds_info.height + 'px'
+                            span.style.display = 'inline-block'
 
-                magnet.className = magnet.className.replace(' dragging', ' moved')
+                            magnet.className = magnet.className.replace(' dragging', ' moved')
 
-                // magnet top and left are set to the current cursor position
-                magnet.style.position = 'absolute'
-                magnet.style.top = event.clientY + 'px'
-                magnet.style.left = event.clientX + 'px'
+                            // magnet top and left are set to the current cursor position
+                            magnet.style.position = 'absolute'
+                            magnet.style.top = event.clientY + 'px'
+                            magnet.style.left = event.clientX + 'px'
 
-            })*/
+                        })*/
 
             container.appendChild(magnet)
 
@@ -213,11 +217,8 @@
             magnet.setAttribute("id", "word-" + String(word))
 
 
-
             magnet_specs_hash[1](word, "bounds_info", bounds_info)
             magnet_specs_hash[1](word, "width", width)
-
-
 
 
             if (magnet_hash[0][width]) {
@@ -242,24 +243,11 @@
 
             count[1]()
 
-
-
-
-
-
-
-
-
-
-
-
-
-    })
+        })
 
 
         // sort magnet_hash[100] by bounds_info.width
         for (const [key, value] of Object.entries(magnet_hash[0])) {
-
 
             magnet_hash[0][key].sort((a, b) => {
 
@@ -282,35 +270,33 @@
             const moveSameWidthWords = () => {
                 magnet_hash[0][key].forEach(magnet_index => {
 
-                // get element with id = word
-                const word = magnet_index.innerText || ""
+                    // get element with id = word
+                    const word = magnet_index.innerText || ""
 
-                if (word === "") {
-                    return
-                } else {
-                    const magnet = document.getElementById("word-" + word)
+                    if (word === "" || word === undefined || word === null) {
+                        return
+                    } else {
 
-                    // create span element
-                    const span = document.createElement('span')
-                    magnet.style.outline = '1px solid lightgreen'
+                        // create span element
+                        const span = document.createElement('span')
 
-                    span.textContent = magnet.textContent
-                    span.style.width = magnet.getAttribute('data-exact-width') || 0
-                    span.style.width = span.style.width + 'px'
-                    span.style.height = magnet.offsetHeight + 'px'
-                    span.style.display = 'inline-block'
-                    span.style.opacity = "0"
+                        magnet_index.style.outline = '1px solid orange'
 
-                    magnet.before(span)
-                    //container.appendChild(magnet)
-                    document.body.appendChild(magnet)
+                        span.textContent = magnet_index.textContent
+                        span.style.width = magnet_index.getAttribute('data-exact-width') || 0
+                        span.style.width = span.style.width + 'px'
+                        span.style.height = magnet_index.offsetHeight + 'px'
+                        span.style.display = 'inline-block'
+                        span.style.opacity = "0"
 
-
-                }
-            })
+                        magnet_index.before(span)
+                        //container.appendChild(magnet)
+                        document.body.appendChild(magnet_index)
+                    }
+                })
             }
 
-            // moveSameWidthWords()
+            moveSameWidthWords()
 
         }
 
@@ -318,56 +304,56 @@
     }
 
     let additional_words = ["bitcoin", "bitcoin", "bitcoin",
-    "Bitcoin",
-    "Bitcoin",
-    "Bitcoin",
-    "BTC",
-    "EUR",
-    "KYC",
-    "USD",
-    "₿",
-    "₿",
-    "₿",
-    "₿",
-    " ₿ ",
-    "$",
-    "€",
-    "dollars",
-    "cuckbucks",
-    "secure",
-    "secured",
-    "keys",
-    "seed",
-    "words",
-    "cold storage",
-    "wallet",
-    "hot wallet",
-    "in-person",
-    "meet",
-    "meetup",
-    "community",
-    "art",
-    "Know Your Butcher",
-    " . ",
-    " . ",
-    " . ",
-    " , ",
-    " , ",
-    " , ",
-    " ! ",
-    " ! ",
-    " ? ",
-    " ? ",
-    " ( ",
-    " ) ",
-    " { ",
-    " } ",
-    " [ ",
-    " ] ",
-    " = ",
-    " ≠ ",
-    "non",
-    "not"
+        "Bitcoin",
+        "Bitcoin",
+        "Bitcoin",
+        "BTC",
+        "EUR",
+        "KYC",
+        "USD",
+        "₿",
+        "₿",
+        "₿",
+        "₿",
+        " ₿ ",
+        "$",
+        "€",
+        "dollars",
+        "cuckbucks",
+        "secure",
+        "secured",
+        "keys",
+        "seed",
+        "words",
+        "cold storage",
+        "wallet",
+        "hot wallet",
+        "in-person",
+        "meet",
+        "meetup",
+        "community",
+        "art",
+        "Know Your Butcher",
+        " . ",
+        " . ",
+        " . ",
+        " , ",
+        " , ",
+        " , ",
+        " ! ",
+        " ! ",
+        " ? ",
+        " ? ",
+        " ( ",
+        " ) ",
+        " { ",
+        " } ",
+        " [ ",
+        " ] ",
+        " = ",
+        " ≠ ",
+        "non",
+        "not"
     ]
 
     const digits = [...Array(10).keys()].map((n) => String.fromCharCode(48 + n))
@@ -376,11 +362,11 @@
 
 
     // concat uppercase_alphabets and lowercase_alphabets to additional_words
-    additional_words.push( ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...uppercase_alphabets, ...uppercase_alphabets, ...uppercase_alphabets, ...lowercase_alphabets, ...lowercase_alphabets, ...lowercase_alphabets )
+    additional_words.push(...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...digits, ...uppercase_alphabets, ...uppercase_alphabets, ...uppercase_alphabets, ...lowercase_alphabets, ...lowercase_alphabets, ...lowercase_alphabets)
 
     console.log(additional_words)
 
-    let keywords = [ "abandon",
+    let keywords = ["abandon",
         "ability",
         "able",
         "about",
@@ -2427,7 +2413,7 @@
         "zebra",
         "zero",
         "zone",
-        "zoo" ]
+        "zoo"]
 
     keywords.push(...additional_words)
 
