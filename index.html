@@ -266,7 +266,6 @@
                         Number(b.getAttribute("data-exact-width")))
                 }
             })
-
             const moveSameWidthWords = () => {
                 magnet_hash[0][key].forEach(magnet_index => {
 
@@ -295,11 +294,52 @@
                     }
                 })
             }
-
             moveSameWidthWords()
+        }
+
+
+
+        const moveRemainingMagnets = () => {
+
+            // get all magnets inside container div-element
+            const remaining_magnets = container.querySelectorAll('div.magnet')
+
+            console.log(remaining_magnets)
+
+            remaining_magnets.forEach(magnet => {
+
+                // get element with id = word
+                const word = magnet.innerText || ""
+
+                if (word === "" || word === undefined || word === null) {
+                    return
+                } else {
+
+                    // create span element
+                    const span = document.createElement('span')
+
+                    magnet.style.outline = '1px solid orange'
+
+                    span.textContent = magnet.textContent
+                    span.style.width = magnet.getAttribute('data-exact-width') || 0
+                    span.style.width = span.style.width + 'px'
+                    span.style.height = magnet.offsetHeight + 'px'
+                    span.style.display = 'inline-block'
+                    span.style.opacity = "0"
+
+                    magnet.before(span)
+                    //container.appendChild(magnet)
+                    document.body.appendChild(magnet)
+                }
+            })
+
+            console.log("deleting container")
+
+            container.remove()
 
         }
 
+        moveRemainingMagnets()
 
     }
 
@@ -352,7 +392,13 @@
         " ] ",
         " = ",
         " ≠ ",
+        "do",
+        "you",
         "non",
+        "me",
+        "trade",
+        "had",
+        "have",
         "not"
     ]
 
