@@ -51,13 +51,17 @@
                 color: #000;
                 box-shadow: none;
                 cursor: default;
-                display: inline-block;
+                display: inline-table;
                 font-weight: 600;
                 border-radius: 0;
+                border-color: transparent !important;
+                border-width: 0 !important;
                 outline-width: 1px;
                 outline-color: lightgray;
-                outline-style: dashed;
-
+                outline-style: dotted;
+                break-inside: avoid;
+                page-break-inside: avoid;
+                margin: 1px;
             }
         }
     </style>
@@ -68,6 +72,16 @@
 
     const count = [0, function () {
         this[0] = Number(this[0]) + 1;
+
+    }]
+
+    const maxWidth = [0, function (width) {
+        this[0] = Number(width);
+
+    }]
+
+    const widestMagnet = [0, function (magnet) {
+        this[0] = magnet;
 
     }]
 
@@ -218,7 +232,12 @@
 
 
             magnet_specs_hash[1](word, "bounds_info", bounds_info)
-            magnet_specs_hash[1](word, "width", width)
+            magnet_specs_hash[1](word, "width", bounds_info.width)
+
+            if (Number(width) > Number(maxWidth[0])) {
+                maxWidth[1](width)
+                widestMagnet[1](magnet)
+            }
 
 
             if (magnet_hash[0][width]) {
@@ -340,6 +359,9 @@
         }
 
         moveRemainingMagnets()
+
+        console.log("widest magnet width", maxWidth[0])
+        console.log("widest magnet", widestMagnet[0])
 
     }
 
