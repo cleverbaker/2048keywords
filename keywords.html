@@ -30,6 +30,34 @@
             display: inline-block;
             font-weight: 600;
         }
+
+    /*    Print media */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .magnet-container {
+                margin: 0;
+                padding: 0;
+            }
+            .magnet {
+                background-color: #fff;
+                color: #000;
+                box-shadow: none;
+                cursor: default;
+                display: inline-table !important;
+                font-weight: 600;
+                border-radius: 0;
+                border-color: transparent !important;
+                border-width: 0 !important;
+                outline-width: 1px;
+                outline-color: lightgray;
+                outline-style: dotted;
+                break-inside: avoid;
+                margin: 1px !important;
+            }
+        }
     </style>
 </head>
 <body>
