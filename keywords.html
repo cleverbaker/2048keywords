@@ -24,11 +24,29 @@
             padding: 10px 20px;
             background-color: #fafafa;
             color: #1e1e1e;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
             cursor: pointer;
             display: inline-block;
             font-weight: 600;
+            position: relative;
+
+            /* widest keyword magnet is 123px wide, so make all magnets 125px wide */
+            width: 125px !important;
+            text-align: center;
+        }
+
+        .magnet::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: darkorange;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            opacity: 0.25;
         }
 
     /*    Print media */
