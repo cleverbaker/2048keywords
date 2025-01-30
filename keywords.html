@@ -76,7 +76,7 @@
                 color: #000;
                 box-shadow: none;
                 cursor: default;
-                display: inline-table !important;
+                /*display: inline-table !important;*/
                 font-weight: 600;
                 border-radius: 0;
                 border-color: transparent !important;
@@ -85,7 +85,11 @@
                 outline-color: lightgray;
                 outline-style: dotted;
                 break-inside: avoid;
-                margin: 1px !important;
+                /*margin: 1px !important;*/
+            }
+
+            .magnet.first-on-page {
+                break-before: page;
             }
         }
     </style>
@@ -110,6 +114,8 @@
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
         const magnets = document.querySelectorAll('.magnet')
 
+        const rowsPerPage = 25
+
         svg.setAttribute('width', '100%')
         svg.setAttribute('height', '100%')
         svg.setAttribute('viewBox', '0 0 100 100')
@@ -123,6 +129,10 @@
         let magnetDOMCurrentX
         let magnetDOMPreviousX
         let magnetDOMCurrentRow = 0
+
+        let firstRowOfLastPage = 0
+
+        let currentPageContainerElement = document.createElement('div')
 
         for (let i = 0; i < magnets.length; i++) {
             const magnet = magnets[i]
@@ -138,8 +148,6 @@
 
                         magnet.setAttribute('data-row', String(magnetDOMCurrentRow))
                         magnet.setAttribute('data-xpos', magnetDOMCurrentX)
-                        magnet.setAttribute('data-new-row-a', 'true')
-
                         magnet.setAttribute('data-prev-xpos', magnetDOMPreviousX)
 
                         magnetDOMTable[magnetDOMCurrentRow].push(magnet)
@@ -165,6 +173,45 @@
                             magnet.setAttribute('data-row', String(magnetDOMCurrentRow))
                             magnet.setAttribute('data-xpos-is-zero-a', magnetDOMCurrentX)
                             magnet.setAttribute('data-new-row', 'true')
+
+                            // every 25th row, setAttribute('data-new-page', 'true')
+                            if (magnetDOMCurrentRow % rowsPerPage === 0) {
+                                const newPage = document.createElement('div')
+
+                                currentPageContainerElement.setAttribute('data-last-row', String(magnetDOMCurrentRow
+                                    - 1))
+
+                                newPage.setAttribute('data-start-row', String(magnetDOMCurrentRow))
+                                magnet.setAttribute('data-new-page', 'true')
+
+                                magnet.style.outlineColor = 'orange'
+
+                                magnet.classList.add('first-on-page')
+
+                                newPage.style.pageBreakAfter = 'always'
+                                newPage.classList.add('magnet-page')
+
+                                console.log(currentPageContainerElement)
+                                currentPageContainerElement.style.outlineWidth = '1px'
+                                currentPageContainerElement.style.outlineColor = 'red'
+
+                                currentPageContainerElement.style.outlineStyle = 'solid'
+
+/*
+                                for (let i = firstRowOfLastPage; i < magnetDOMCurrentRow - 1; i++) {
+                                    let rowM = magnetDOMTable[i]
+
+                                    // make rowM a HTML string
+                                    rowM = rowM.map(m => m.outerHTML).join('')
+                                    currentPageContainerElement.insertAdjacentHTML('beforeend', rowM)
+
+                                }*/
+
+                                magnet.before(newPage)
+
+                                currentPageContainerElement = newPage
+
+                            }
 
                             magnetDOMTable.push([magnet])
                         } else {
@@ -200,6 +247,11 @@
                 magnet.setAttribute('data-xpos', magnetDOMCurrentX)
                 magnet.setAttribute('data-prev-xpos', magnetDOMPreviousX)
                 magnet.setAttribute('data-x--0--', magnetDOMCurrentX)
+
+                currentPageContainerElement.setAttribute('data-start-row', String(magnetDOMCurrentRow))
+                currentPageContainerElement.classList.add('magnet-page')
+                magnet.before(currentPageContainerElement)
+
                 magnetDOMTable.push([magnet])
 
                 magnetDOMPreviousX = magnetDOMCurrentX
