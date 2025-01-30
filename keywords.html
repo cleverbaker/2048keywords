@@ -8,35 +8,42 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-            margin: 6em 1em 1em 3em;
+            justify-content: left;
+            align-items: flex-start;
+            /*background-color: #f0f0f0;*/
+            /*margin: 6em 1em 1em 3em;*/
+            margin: 0;
+            padding: 0;
         }
         .magnet-container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px;
+            justify-content: left;
+            /*gap: 10px;*/
+            /*padding: 10px;*/
+            margin: 0;
+            padding: 0;
         }
         .magnet {
             padding: 10px 20px;
-            background-color: #fafafa;
+            /*background-color: #fafafa;*/
             color: #1e1e1e;
-            border-radius: 2px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+            color: #000000;
+            /*border-radius: 2px;*/
+            /*box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);*/
             cursor: pointer;
             display: inline-block;
             font-weight: 600;
             position: relative;
+            outline: #eee 0.5px solid;
 
             /* widest keyword magnet is 123px wide, so make all magnets 125px wide */
-            width: 125px !important;
+            /*width: 125px !important;*/
             text-align: center;
+            font-size: 14px;
         }
 
-        .magnet::after {
+/*        .magnet::after {
             content: '';
             display: inline-block;
             width: 8px;
@@ -47,7 +54,7 @@
             top: 4px;
             left: 4px;
             opacity: 0.25;
-        }
+        }*/
 
     /*    Print media */
         @media print {
@@ -92,6 +99,110 @@
             container.appendChild(magnet)
         });
 
+    }
+
+    function makeSVG() {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        const magnets = document.querySelectorAll('.magnet')
+
+        svg.setAttribute('width', '100%')
+        svg.setAttribute('height', '100%')
+        svg.setAttribute('viewBox', '0 0 100 100')
+        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+        svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+
+
+        // document.body.appendChild(svg)
+
+        let magnetDOMTable = []
+        let magnetDOMCurrentX
+        let magnetDOMPreviousX
+        let magnetDOMCurrentRow = 0
+
+        for (let i = 0; i < magnets.length; i++) {
+            const magnet = magnets[i]
+
+            if (magnetDOMCurrentX || magnetDOMCurrentX === 0) {
+
+                if (magnetDOMPreviousX || magnetDOMPreviousX === 0) {
+
+                    if (magnetDOMCurrentX - magnetDOMPreviousX < 0) {
+
+                        magnetDOMPreviousX = magnetDOMCurrentX
+                        magnetDOMCurrentX = magnet.getBoundingClientRect().x
+
+                        magnet.setAttribute('data-row', String(magnetDOMCurrentRow))
+                        magnet.setAttribute('data-xpos', magnetDOMCurrentX)
+                        magnet.setAttribute('data-new-row-a', 'true')
+
+                        magnet.setAttribute('data-prev-xpos', magnetDOMPreviousX)
+
+                        magnetDOMTable[magnetDOMCurrentRow].push(magnet)
+
+                    } else {
+
+                        magnetDOMPreviousX = magnetDOMCurrentX
+                        magnetDOMCurrentX = magnet.getBoundingClientRect().x
+                        magnet.setAttribute('data-row', String(magnetDOMCurrentRow))
+                        magnet.setAttribute('data-xpos', magnetDOMCurrentX)
+                        magnet.setAttribute('data-prev-xpos', magnetDOMPreviousX)
+                        magnet.setAttribute('data-new-row', 'false')
+
+
+                        if (magnetDOMPreviousX === 0) {
+                            magnet.setAttribute('data-xprev-is-zero-a', magnetDOMPreviousX)
+                        }
+
+                        if (magnetDOMCurrentX === 0) {
+
+                            magnetDOMCurrentRow += 1
+
+                            magnet.setAttribute('data-row', String(magnetDOMCurrentRow))
+                            magnet.setAttribute('data-xpos-is-zero-a', magnetDOMCurrentX)
+                            magnet.setAttribute('data-new-row', 'true')
+
+                            magnetDOMTable.push([magnet])
+                        } else {
+                            magnetDOMTable[magnetDOMCurrentRow].push(magnet)
+                        }
+
+                    }
+
+                } else {
+                    magnetDOMPreviousX = magnetDOMCurrentX ? magnetDOMCurrentX : 0
+                    magnetDOMCurrentX = magnet.getBoundingClientRect().x
+
+                    magnet.setAttribute('data-row', String(magnetDOMCurrentRow))
+                    magnet.setAttribute('data-xpos', magnetDOMCurrentX)
+                    magnet.setAttribute('data-prev-xpos', magnetDOMPreviousX)
+
+                    if (magnetDOMCurrentX === 0) {
+                        magnet.setAttribute('data-xpos-is-zero', magnetDOMCurrentX)
+                    }
+
+                    if (magnetDOMCurrentX - magnetDOMPreviousX > 0) {
+                        magnetDOMTable[0].push(magnet)
+                    } else {
+                        magnetDOMTable.push([magnet])
+                        magnetDOMCurrentRow += 1
+                    }
+                }
+
+            } else {
+                magnetDOMCurrentX = magnet.getBoundingClientRect().x
+
+                magnet.setAttribute('data-row', magnetDOMCurrentRow)
+                magnet.setAttribute('data-xpos', magnetDOMCurrentX)
+                magnet.setAttribute('data-prev-xpos', magnetDOMPreviousX)
+                magnet.setAttribute('data-x--0--', magnetDOMCurrentX)
+                magnetDOMTable.push([magnet])
+
+                magnetDOMPreviousX = magnetDOMCurrentX
+            }
+
+        }
+
+        console.log(magnetDOMTable)
     }
 
     const keywords = [ "abandon",
@@ -2144,6 +2255,8 @@
         "zoo" ];
 
     makeMagnets(keywords);
+
+    makeSVG();
 
 </script>
 </body>
